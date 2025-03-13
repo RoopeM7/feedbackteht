@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../koko.css" />
+    <title>Palaute</title>
+    <nav>
+      <% if (user) { %>
+      <a href="/logout">Kirjaudu ulos</a>
+      <% } %>
+    </nav>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/customer">Asiakkaat ja käyttäjät</a></li>
+        <li><a href="/support">Tukipyynnöt</a></li>
+        <li><a href="/feedback">Palaute</a></li>
+      </ul>
+    </nav>
+
+    <h1>Palaute</h1>
+    <table id="feedbackTable">
+      <tr>
+        <th>ID</th>
+        <th>Nimi</th>
+        <th>Email</th>
+        <th>Palaute</th>
+        <th>Saapunut</th>
+        <th>Käsitelty</th>
+      </tr>
+      <% if (feedback && feedback.length > 0) { %> <% feedback.forEach(fb => {
+      %>
+      <tr>
+        <td><%= fb.id %></td>
+        <td><%= fb.guest_name %></td>
+        <td><%= fb.guest_email %></td>
+        <td><%= fb.feedback %></td>
+        <td><%= fb.arrived %></td>
+        <td><%= fb.handled ? "Kyllä" : "Ei"%></td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="6">Ei palautteita saatavilla.</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>

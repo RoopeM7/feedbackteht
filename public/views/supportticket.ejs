@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/koko.css" />
+    <title>supportticketmessage</title>
+  </head>
+  <body>
+    <h1>supportticket</h1>
+    <table id="supportticket">
+      <div class="ticket">
+        <table>
+          <tr>
+            <th>ID:</th>
+            <td><%= ticket.id %></td>
+            <th>Asiakas:</th>
+            <td><%= ticket.name %></td>
+          </tr>
+          <tr>
+            <th>Tila:</th>
+            <td>
+              <form action="/updateTicketStatus" method="POST">
+                <select name="status" id="status" onchange="this.form.submit()">
+                  <% statuses.forEach((status) => { %>
+                    <option value="<%= status.id %>" <%= ticket.status === status.description ? 'selected' : '' %>>
+                      <%= status.description %>
+                    </option>
+                  <% }) %>
+                </select>
+                <input type="hidden" name="ticket_id" value="<%= ticket.id %>" />
+              </form>
+            </td>
+            <th>Käsitelty:</th>
+            <td><%= ticket.handled ? ticket.handled : "Ei vielä käsitelty" %></td>
+            <th>Kuvaus:</th>
+            <td><%= ticket.description %></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="messages">
+        <h2>Viestit</h2>
+        <table>
+          <% if (supportticket.length > 0) { %>
+            <% supportticket.forEach((message) => { %>
+              <tr>
+                <td><%= message.created_at %></td>
+                <td><%= message.fullname %></td>
+                <td><%= message.body %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="3">Ei viestejä</td>
+            </tr>
+          <% } %>
+        </table>
+      </div>
+
+      <form action="/sendMessage" method="POST">
+        <input type="hidden" name="ticket_id" value="<%= ticket.id %>">
+        <input type="hidden" name="from_user" value="1"> 
+        <textarea name="message" placeholder="Kirjoita viesti" required></textarea>
+        <button type="submit">Lähetä</button>
+      </form>
+      
+  </body>
+</html>

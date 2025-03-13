@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="koko.css" />
+    <title>Support</title>
+    <nav>
+      <% if (user) { %>
+      <a href="/logout">Kirjaudu ulos</a>
+      <% } %>
+    </nav>
+  </head>
+  <nav>
+    <ul>
+      <li><a href="customer">Asiakkaat ja käyttäjät</a></li>
+      <li><a href="support">Tukipyynnöt</a></li>
+      <li><a href="feedback">Palaute</a></li>
+    </ul>
+  </nav>
+  <body>
+    <h1>tukipyynnöt</h1>
+    <table id="supportTable">
+      <tr>
+        <th>ID</th>
+        <th>Saapunut</th>
+        <th>Asiakas</th>
+        <th>kuvaus</th>
+        <th>handled</th>
+        <th>Status</th>
+      </tr>
+      <tbody>
+        <% support.forEach(ticket => { %>
+        <tr>
+          <td><%= ticket.id %></td>
+          <td><%= ticket.arrived %></td>
+          <td><%= ticket.name %></td>
+          <td><%= ticket.description %></td>
+          <td><%= ticket.handled %></td>
+          <td><%= ticket.status %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </body>
+</html>

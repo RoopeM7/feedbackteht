@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/koko.css" />
+    <title>Customers</title>
+    <nav>
+      <% if (user) { %>
+      <a href="/logout">Kirjaudu ulos</a>
+      <% } %>
+    </nav>
+  </head>
+  <nav>
+    <ul>
+      <li><a href="customer">Asiakkaat ja käyttäjät</a></li>
+      <li><a href="support">Tukipyynnöt</a></li>
+      <li><a href="feedback">Palaute</a></li>
+    </ul>
+  </nav>
+  <body>
+    <h1>Asiakkaat ja käyttäjät</h1>
+
+    <h2>Asiakkaat</h2>
+    <table id="customersTable">
+      <tr>
+        <th>ID</th>
+        <th>Nimi</th>
+      </tr>
+      <tbody>
+        <% customers.forEach((customer) => { %>
+        <tr>
+          <td><%= customer.id %></td>
+          <td><%= customer.name %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <h2>Käyttäjät</h2>
+    <table id="usersTable">
+      <tr>
+        <th>ID</th>
+        <th>kokonimi</th>
+        <th>Email</th>
+        <th>mailing-lista</th>
+        <th>Asiakas ID</th>
+        <th>Admin</th>
+      </tr>
+      <tbody>
+        <% users.forEach((user) => { %>
+        <tr>
+          <td><%= user.id %></td>
+          <td><%= user.fullname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.mailing_list %></td>
+          <td><%= user.customer_id %></td>
+          <td><%= user.admin %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </body>
+</html>
