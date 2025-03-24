@@ -2,6 +2,7 @@ import express from "express"; // localhost:3000/feedback on PÄÄSIVU // ei per
 import path from "path";
 import mysql from "mysql2/promise";
 import session from "express-session";
+import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
 const port = 3000;
 const host = "localhost";
@@ -41,7 +42,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const { identifier } = req.body;
+  const { identifier, password } = req.body;
 
   let connection;
   try {
@@ -59,20 +60,26 @@ app.post("/login", async (req, res) => {
 
     if (rows.length > 0) {
       const user = rows[0];
-      if (user.admin == 1) {
-        req.session.user = {
-          id: user.id,
-          email: user.email,
-          fullname: user.fullname,
-        };
-        return res.redirect("/feedback");
+
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
+        if (user.admin == 1) {
+          req.session.user = {
+            id: user.id,
+            email: user.email,
+            fullname: user.fullname,
+          };
+          return res.redirect("/feedback");
+        } else {
+          return res.status(403).send("Ei käyttöoikeuksia!");
+        }
       }
     }
 
-    res.status(401).send("VÄÄRÄ TUNNUS!!");
+    res.status(401).send("Väärä tunnus tai salasana!");
   } catch (err) {
     console.error("Tietokantavirhe:", err);
-    res.status(500).send("Sisäinen palvelinvirhe");
+    res.status(500).send("AIHEUTIT PALVELINVIRHEEN!!!");
   } finally {
     if (connection) {
       await connection.end();

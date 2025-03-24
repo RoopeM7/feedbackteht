@@ -8,9 +8,13 @@
   <body>
     <h1>Kirjaudu sisään</h1>
     <form action="/login" method="POST">
-      <label for="identifier">ID tai sähköposti:</label>
+      <label for="identifier">Käyttäjätunnus tai sähköposti:</label>
       <input type="text" id="identifier" name="identifier" required />
-      <button type="submit">Kirjaudu</button>
+
+      <label for="password">Salasana:</label>
+      <input type="password" id="password" name="password" required />
+
+      <button type="submit">Kirjaudu sisään</button>
     </form>
   </body>
 </html>
