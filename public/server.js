@@ -127,6 +127,48 @@ app.get("/customer", checkAuth, async (req, res) => {
     }
   }
 }); //CUSTOMERS LOPPUU
+
+//kayttaja alkaa
+app.get("/kayttaja/:id", checkAuth, async (req, res) => {
+  const userId = req.params.id;
+  let connection;
+
+  try {
+    connection = await mysql.createConnection({
+      host: dbHost,
+      user: dbUser,
+      password: dbPwd,
+      database: dbName,
+    });
+
+    const [customers] = await connection.execute("SELECT * FROM customer");
+
+    const [userRows] = await connection.execute(
+      "SELECT * FROM system_user WHERE id = ?",
+      [userId]
+    );
+
+    if (userRows.length === 0) {
+      return res.status(404).send("Käyttäjää ei löytynyt");
+    }
+
+    const user = userRows[0];
+
+    res.render("kayttaja", {
+      customers: customers,
+      user: user,
+    });
+  } catch (err) {
+    console.error("PALVELIN VIRHE:", err);
+    res.status(500).send("PALVELIN VIRHE");
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+//kayttaja loppuu
+
 // SUPPORT ALKAA
 app.get("/support", checkAuth, async (req, res) => {
   let connection;
@@ -265,6 +307,50 @@ app.post("/sendMessage", async (req, res) => {
     }
   }
 }); //viesti kohta loppuu
+
+//kayttajatietojentallentamis kohta alkaa
+app.post("/kayttaja/:id", checkAuth, async (req, res) => {
+  const userId = req.params.id;
+  const updatedName = req.body.fullname || null;
+  const updatedEmail = req.body.email || null;
+  const updatedPassword = req.body.password
+    ? await bcrypt.hash(req.body.password, 10)
+    : null;
+  let connection;
+
+  try {
+    connection = await mysql.createConnection({
+      host: dbHost,
+      user: dbUser,
+      password: dbPwd,
+      database: dbName,
+    });
+
+    if (updatedPassword) {
+      // Jos syötettiin uusi salasana se pitäisi salata ja päivittää tietokantaan!!
+      // SETOIMII!!
+      await connection.execute(
+        "UPDATE system_user SET fullname = ?, email = ?, password = ? WHERE id = ?",
+        [updatedName, updatedEmail, updatedPassword, userId]
+      );
+    } else {
+      await connection.execute(
+        "UPDATE system_user SET fullname = ?, email = ? WHERE id = ?",
+        [updatedName, updatedEmail, userId]
+      );
+    }
+
+    res.redirect(`/kayttaja/${userId}`);
+  } catch (err) {
+    console.error("TietokantaVIRHE:", err);
+    res.status(500).send("VIRHE ISO VIRHE TIETOKANTAAN TALLENTAMISESSA");
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+//kayttajatietojentallentamis kohta loppuu
 
 //UpdateTicketstatus kohta alkaa
 app.post("/updateTicketStatus", async (req, res) => {

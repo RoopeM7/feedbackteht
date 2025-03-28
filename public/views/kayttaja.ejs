@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Käyttäjä</title>
+    <link rel="stylesheet" href="../koko.css" />
+    <nav>
+      <% if (user) { %>
+      <a href="/logout">Kirjaudu ulos</a>
+      <% } %>
+  </head>
+  <nav>
+    <ul>
+      <li><a href="../customer">Asiakkaat ja käyttäjät</a></li>
+      <li><a href="../support">Tukipyynnöt</a></li>
+      <li><a href="../feedback">Palaute</a></li>
+    </ul>
+  </nav>
+  <body>
+    <h1>Muokkaa käyttäjä tietoja</h1>
+    <form method="POST" action="/kayttaja/<%= user.id %>">
+      <input type="text" name="fullname" value="<%= user.fullname %>" />
+      <input type="text" name="email" value="<%= user.email %>" />
+      <input type="password" name="password" placeholder="Uusi salasana" />
+      <button type="submit">Tallenna</button>
+    </form>
+  </body>
+</html>
